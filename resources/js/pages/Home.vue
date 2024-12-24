@@ -1,60 +1,125 @@
 <template>
     <q-layout view="hHh lpR fFf">
-
         <q-header elevated class="bg-primary text-white" height-hint="98">
-            <q-toolbar>
-                <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
-
-                <q-toolbar-title>
-                    <q-avatar>
-                        <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg">
-                    </q-avatar>
-                    Title
-                </q-toolbar-title>
-            </q-toolbar>
-
-            <q-tabs align="left">
-                <q-route-tab to="/page1" label="Page One" />
-                <q-route-tab to="/page2" label="Page Two" />
-                <q-route-tab to="/page3" label="Page Three" />
-            </q-tabs>
+            <Toolbar />
         </q-header>
-
-        <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
-            <!-- drawer content -->
-        </q-drawer>
-
-        <q-page-container>
-            <router-view />
+        <q-page-container class="flex flex-center">
+            <div v-if="loadingUser || loadingHeroBanner || loadingComicBanner">
+                <div class="loading-spinner"></div>
+            </div>
+            <div v-else class="banner-container">
+                <div class="banner" @click="goToPage('heroi')">
+                    <img :src="heroBannerImage" alt="Heroes" />
+                    <div class="banner-text">Listar Heróis</div>
+                </div>
+                <div class="banner" @click="goToPage('quadrinho')">
+                    <img :src="comicBannerImage" alt="Comics" />
+                    <div class="banner-text">Listar Quadrinhos</div>
+                </div>
+            </div>
         </q-page-container>
-
-        <q-footer elevated class="bg-grey-8 text-white">
-            <q-toolbar>
-                <q-toolbar-title>
-                    <q-avatar>
-                        <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg">
-                    </q-avatar>
-                    <div>Title</div>
-                </q-toolbar-title>
-            </q-toolbar>
-        </q-footer>
-
     </q-layout>
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+import { useRouter } from 'vue-router';
+import Toolbar from '../components/Toolbar.vue';
 
 export default {
+    components: {
+        Toolbar
+    },
     setup () {
-        const leftDrawerOpen = ref(false)
+        const menu = ref(false);
+        const user = ref({
+            name: '',
+            email: ''
+        });
+        const heroBannerImage = ref('');
+        const comicBannerImage = ref('');
+        const loadingUser = ref(true);
+        const loadingHeroBanner = ref(true);
+        const loadingComicBanner = ref(true);
+        const router = useRouter();
+
+        const fetchUser = async () => {
+            try {
+                const response = await axios.get('/user');
+                user.value = response.data;
+            } catch (error) {
+                console.error('Error fetching user:', error);
+            } finally {
+                loadingUser.value = false;
+            }
+        };
+
+        const fetchHeroBannerImage = async () => {
+            try {
+                const response = await axios.get('/api/marvel/characters', {
+                    params: {
+                        limit: 20
+                    }
+                });
+                const characters = response.data.data.results;
+                const randomIndex = Math.floor(Math.random() * characters.length);
+                const character = characters[randomIndex];
+                heroBannerImage.value = `${character.thumbnail.path}.${character.thumbnail.extension}`;
+            } catch (error) {
+                console.error('Error fetching hero banner image:', error);
+            } finally {
+                loadingHeroBanner.value = false;
+            }
+        };
+
+        const fetchComicBannerImage = async () => {
+            try {
+                const response = await axios.get('/api/marvel/comics', {
+                    params: {
+                        limit: 20
+                    }
+                });
+                const comics = response.data.data.results;
+                const randomIndex = Math.floor(Math.random() * comics.length);
+                const comic = comics[randomIndex];
+                comicBannerImage.value = `${comic.thumbnail.path}.${comic.thumbnail.extension}`;
+            } catch (error) {
+                console.error('Error fetching comic banner image:', error);
+            } finally {
+                loadingComicBanner.value = false;
+            }
+        };
+
+        const goToPage = (page) => {
+            window.location.href = page;
+        };
+
+        const toggleMenu = () => {
+            menu.value = !menu.value;
+        };
+
+        onMounted(async () => {
+            await fetchUser();
+            await fetchHeroBannerImage();
+            await fetchComicBannerImage();
+        });
 
         return {
-            leftDrawerOpen,
-            toggleLeftDrawer () {
-                leftDrawerOpen.value = !leftDrawerOpen.value
-            }
-        }
+            menu,
+            user,
+            heroBannerImage,
+            comicBannerImage,
+            loadingUser,
+            loadingHeroBanner,
+            loadingComicBanner,
+            toggleMenu,
+            goToPage
+        };
     }
-}
+};
 </script>
+
+<style lang="scss" scoped>
+@import '../../css/styles.sass';
+</style>
