@@ -26,7 +26,7 @@
 
 <script>
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import axios from 'axios';
 
 export default {
     props: {
@@ -37,7 +37,6 @@ export default {
     },
     setup (props) {
         const menu = ref(false);
-        const router = useRouter();
 
         const toggleMenu = () => {
             menu.value = !menu.value;
