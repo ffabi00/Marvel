@@ -16,11 +16,16 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->string('thumbnail')->nullable();
-            $table->string('marvel_id')->unique(); // ID fornecido pela API da Marvel
+            $table->string('marvel_id')->unique();
+            $table->date('publication_date')->nullable();
+            $table->decimal('price', 8, 2)->nullable();
+            $table->integer('pages')->nullable();
+            $table->json('characters')->nullable();
+            $table->json('creators')->nullable();
+            $table->json('stories')->nullable();
             $table->timestamps();
         });
     }
-
 
     /**
      * Reverse the migrations.
