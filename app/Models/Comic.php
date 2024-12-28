@@ -10,11 +10,37 @@ class Comic extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title',
-        'description',
-        'thumbnail',
         'marvel_id',
+        'title',
+        'price',
+        'pages',
+        'characters',
+        'description',
+        'publication_date',
+        'thumbnail',
+        'creators',
+        'stories'
     ];
+
+    public function getThumbnailAttribute($value)
+    {
+        return json_decode($value, true);
+    }
+
+    public function getCreatorsAttribute($value)
+    {
+        return json_decode($value, true);
+    }
+
+    public function getStoriesAttribute($value)
+    {
+        return json_decode($value, true);
+    }
+
+    public function getCharactersAttribute($value)
+    {
+        return json_decode($value, true);
+    }
 
     public function favorites()
     {

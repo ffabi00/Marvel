@@ -14,7 +14,16 @@ class Character extends Model
         'description',
         'thumbnail',
         'marvel_id',
+        'comics_available',
+        'series_available',
+        'stories_available',
+        'events_available',
     ];
+
+    public function getThumbnailAttribute($value)
+    {
+        return json_decode($value, true);
+    }
 
     public function favorites()
     {
