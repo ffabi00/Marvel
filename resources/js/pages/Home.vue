@@ -8,11 +8,11 @@
                 <div class="loading-spinner"></div>
             </div>
             <div v-else class="banner-container">
-                <div class="banner" @click="goToPage('heroi')">
+                <div class="banner" @click="goToPage('characters')">
                     <img :src="heroBannerImage" alt="Heroes" />
                     <div class="banner-text">Listar Heróis</div>
                 </div>
-                <div class="banner" @click="goToPage('quadrinho')">
+                <div class="banner" @click="goToPage('comics')">
                     <img :src="comicBannerImage" alt="Comics" />
                     <div class="banner-text">Listar Quadrinhos</div>
                 </div>
@@ -23,9 +23,9 @@
 
 <script>
 import { ref, onMounted } from 'vue';
-import axios from 'axios';
 import { useRouter } from 'vue-router';
 import Toolbar from '../components/Toolbar.vue';
+import ApiService from '../components/ApiService.vue';
 
 export default {
     components: {
@@ -46,8 +46,8 @@ export default {
 
         const fetchUser = async () => {
             try {
-                const response = await axios.get('/user');
-                user.value = response.data;
+                const data = await ApiService.fetchData('/api/user');
+                user.value = data;
             } catch (error) {
                 console.error('Error fetching user:', error);
             } finally {
@@ -57,12 +57,8 @@ export default {
 
         const fetchHeroBannerImage = async () => {
             try {
-                const response = await axios.get('/api/marvel/characters', {
-                    params: {
-                        limit: 20
-                    }
-                });
-                const characters = response.data.data.results;
+                const data = await ApiService.fetchData('/api/marvel/characters', { limit: 20 });
+                const characters = data.data.results;
                 const randomIndex = Math.floor(Math.random() * characters.length);
                 const character = characters[randomIndex];
                 heroBannerImage.value = `${character.thumbnail.path}.${character.thumbnail.extension}`;
@@ -75,12 +71,8 @@ export default {
 
         const fetchComicBannerImage = async () => {
             try {
-                const response = await axios.get('/api/marvel/comics', {
-                    params: {
-                        limit: 20
-                    }
-                });
-                const comics = response.data.data.results;
+                const data = await ApiService.fetchData('/api/marvel/comics', { limit: 20 });
+                const comics = data.data.results;
                 const randomIndex = Math.floor(Math.random() * comics.length);
                 const comic = comics[randomIndex];
                 comicBannerImage.value = `${comic.thumbnail.path}.${comic.thumbnail.extension}`;
