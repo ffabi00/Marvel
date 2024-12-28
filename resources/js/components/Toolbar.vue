@@ -7,8 +7,8 @@
                 </div>
                 <div v-else>
                     <q-btn flat label="Home" @click="goToPage('/')" />
-                    <q-btn flat label="Quadrinho" @click="goToPage('quadrinho')" />
-                    <q-btn flat label="Herói" @click="goToPage('heroi')" />
+                    <q-btn flat label="Quadrinhos" @click="goToPage('comics')" />
+                    <q-btn flat label="Heróis" @click="goToPage('characters')" />
                     <q-btn flat label="Favoritos" @click="goToPage('favorites')" />
                 </div>
                 <q-toolbar-title :class="{ 'marvel-app-title': true, 'large-screen-title': !isSmallScreen }">
@@ -43,7 +43,7 @@ export default {
 
         const fetchUser = async () => {
             try {
-                const response = await axios.get('/user');
+                const response = await axios.get('/api/user');
                 user.value = response.data;
             } catch (error) {
                 console.error('Error fetching user:', error);
