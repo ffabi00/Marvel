@@ -10,6 +10,9 @@
                     <q-item-section>
                         <div class="dropdown-content">
                             <p style="border-bottom: 1px solid black;">{{ user.email }}</p>
+                            <q-item clickable v-ripple @click="goToUserProfile" class="profile">
+                                <q-item-section>Editar Perfil</q-item-section>
+                            </q-item>
                             <q-item clickable v-ripple @click="logout" class="logout">
                                 <q-item-section>Logout</q-item-section>
                             </q-item>
@@ -22,38 +25,52 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 export default {
     props: {
         user: {
             type: Object,
             required: true
-        },
-        menu: {
-            type: Boolean,
-            required: true
         }
     },
-    methods: {
-        toggleMenu () {
-            this.$emit('update:menu', !this.menu);
-        },
-        updateMenu (value) {
-            this.$emit('update:menu', value);
-        },
-        async logout () {
+    setup (props) {
+        const menu = ref(false);
+        const router = useRouter();
+
+        const toggleMenu = () => {
+            menu.value = !menu.value;
+        };
+
+        const updateMenu = (value) => {
+            menu.value = value;
+        };
+
+        const goToUserProfile = () => {
+            window.location.href = '/user';
+        };
+
+        const logout = async () => {
             try {
                 await axios.post('/logout');
                 window.location.href = '/login';
             } catch (error) {
                 console.error('Error logging out:', error);
             }
-        }
+        };
+
+        return {
+            menu,
+            toggleMenu,
+            updateMenu,
+            goToUserProfile,
+            logout
+        };
     }
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 @import '../../css/styles.sass';
 </style>

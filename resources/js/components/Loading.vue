@@ -1,29 +1,8 @@
 <template>
-  <div class="main">
-    <div class="bg"></div>
-    <div class="pane">
-      <div class="rotate">
-        <div class="logo">MARVEL</div>
-        <div class="logo">MARVEL</div>
-        <div class="logo">MARVEL</div>
-        <div class="logo">MARVEL</div>
-        <div class="logo">MARVEL</div>
-        <div class="logo">MARVEL</div>
-        <div class="logo">MARVEL</div>
-        <div class="logo">MARVEL</div>
-        <div class="logo">MARVEL</div>
-        <div class="logo">MARVEL</div>
-        <div class="logo">MARVEL</div>
-        <div class="logo">MARVEL</div>
-        <div class="logo">MARVEL</div>
-        <div class="logo">MARVEL</div>
-        <div class="logo">MARVEL</div>
-        <div class="logo">MARVEL</div>
-        <div class="logo">MARVEL</div>
-        <div class="logo">MARVEL</div>
-        <div class="logo">MARVEL</div>
-        <div class="logo">MARVEL</div>
-      </div>
+  <div class="loading-container">
+    <div class="loading-logo">
+      <div class="logo" style="color: red; border-radius: 8px;">MARVEL</div>
+      <div class="logo" style="color: red; border-radius: 8px;">MARVEL</div>
     </div>
   </div>
 </template>

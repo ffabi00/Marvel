@@ -6,11 +6,11 @@
                 <q-item clickable v-ripple @click="goToPage('')">
                     <q-item-section>Home</q-item-section>
                 </q-item>
-                <q-item clickable v-ripple @click="goToPage('quadrinho')">
-                    <q-item-section>Quadrinho</q-item-section>
+                <q-item clickable v-ripple @click="goToPage('comics')">
+                    <q-item-section>Quadrinhos</q-item-section>
                 </q-item>
-                <q-item clickable v-ripple @click="goToPage('heroi')">
-                    <q-item-section>Herói</q-item-section>
+                <q-item clickable v-ripple @click="goToPage('characters')">
+                    <q-item-section>Heróis</q-item-section>
                 </q-item>
                 <q-item clickable v-ripple @click="goToPage('favorites')">
                     <q-item-section>Favoritos</q-item-section>
