@@ -10,11 +10,22 @@ Este projeto utiliza Laravel, Vue 3, Quasar e Vite. Siga as instruções abaixo 
 - laravel 11.31
 
 ## Dependências Principais
- 
+
 - Quasar: 2.17.5
 - Vue 3: 3.2.47
 - Vite: 6.0
 - Sass: 1.83.0
+- Redis: 4.7.0
+
+##  Chaves de acesso
+- Precisa gerar chaves de acesso na url para alimentar a aplicação e adicionar nas variaveis no .env
+- https://developer.marvel.com/documentation/getting_started
+# Variaveis para carregar
+- API_MARVEL_KEY=
+- API_MARVEL_SECRET=
+
+## Levantar ambiente Redis
+- Para melhorar a performace das consultas
 
 ## Configuração do Ambiente
 
