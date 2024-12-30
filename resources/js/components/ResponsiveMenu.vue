@@ -3,7 +3,7 @@
         <q-btn flat round icon="menu" @click="toggleMenu" />
         <q-menu :value="menu" @input="updateMenu" anchor="bottom left" self="top left" content-class="dropdown-content">
             <q-list class="dropdown-content">
-                <q-item clickable v-ripple @click="goToPage('')">
+                <q-item clickable v-ripple @click="goToPage('/')">
                     <q-item-section>Home</q-item-section>
                 </q-item>
                 <q-item clickable v-ripple @click="goToPage('comics')">
@@ -25,6 +25,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 export default {
+    name: 'ResponsiveMenu',
     setup () {
         const menu = ref(false);
         const router = useRouter();
@@ -52,5 +53,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../css/styles.sass';
+@import '@/css/styles.sass';
 </style>

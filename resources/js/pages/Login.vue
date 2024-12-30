@@ -12,6 +12,7 @@
                     </q-card-section>
                     <q-card-section>
                         <form @submit.prevent="login">
+                            <input type="hidden" :value="csrfToken" name="_token" />
                             <q-input v-model="email" label="Email" type="email" class="q-mb-md input" />
                             <q-input v-model="password" label="Senha" type="password" class="q-mb-md input" />
                             <q-card-actions align="right">
@@ -68,9 +69,10 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
-import Loading from '../components/Loading.vue'
+import Loading from '@/js/components/Loading.vue'
 
 export default {
+    name: 'Login',
     components: {
         Loading
     },
@@ -90,6 +92,8 @@ export default {
         const router = useRouter()
         const $q = useQuasar()
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+
+        axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
 
         const isImageValid = (url) => {
             return new Promise((resolve) => {
@@ -236,5 +240,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../css/styles.sass';
+@import '@/css/styles.sass';
 </style>
