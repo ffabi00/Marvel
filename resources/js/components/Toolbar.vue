@@ -24,10 +24,11 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
-import Dropdown from './Dropdown.vue';
-import ResponsiveMenu from './ResponsiveMenu.vue';
+import Dropdown from '@/js/components/Dropdown.vue';
+import ResponsiveMenu from '@/js/components/ResponsiveMenu.vue';
 
 export default {
+    name: 'Toolbar',
     components: {
         Dropdown,
         ResponsiveMenu
@@ -89,5 +90,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../css/styles.sass';
+@import '@/css/styles.sass';
 </style>

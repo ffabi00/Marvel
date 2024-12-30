@@ -5,17 +5,19 @@
             <div v-if="loadingComics">
                 <div class="loading-spinner"></div>
             </div>
-            <div v-else class="banner-container">
+            <div v-else>
                 <Pagination :totalItems="comics.length" :itemsPerPage="itemsPerPage" :currentPage="currentPage"
                     :loading="loadingComics" @page-changed="changePage" @items-per-page-changed="changeItemsPerPage" />
-                <div class="banner" v-for="(comic, index) in paginatedComics" :key="index"
-                    @click="openComicModal(comic)">
-                    <img :src="`${comic.thumbnail.path}.${comic.thumbnail.extension}`" :alt="comic.title" />
-                    <div class="favorite-container">
-                        <q-icon name="star" class="favorite-icon" @click.stop="confirmFavorite(comic)" />
-                        <span class="favorite-text">Favoritar</span>
+                <div class="banner-container">
+                    <div class="banner" v-for="(comic, index) in paginatedComics" :key="index"
+                        @click="openComicModal(comic)">
+                        <img :src="`${comic.thumbnail.path}.${comic.thumbnail.extension}`" :alt="comic.title" />
+                        <div class="favorite-container">
+                            <q-icon name="star" class="favorite-icon" @click.stop="confirmFavorite(comic)" />
+                            <span class="favorite-text">Favoritar</span>
+                        </div>
+                        <div class="banner-text">{{ comic.title }}</div>
                     </div>
-                    <div class="banner-text">{{ comic.title }}</div>
                 </div>
             </div>
         </q-page-container>
@@ -41,10 +43,10 @@
                         </p>
                         <p><strong>Data de Publicação:</strong> {{ selectedComic.dates?.find(date => date.type ===
                             'onsaleDate')?.date ? formatDate(selectedComic.dates.find(date => date.type ===
-                                'onsaleDate').date) : 'Data não disponível' }}</p>
+                            'onsaleDate').date) : 'Data não disponível' }}</p>
                         <p><strong>Preço:</strong> {{ selectedComic.prices?.find(price => price.type ===
                             'printPrice')?.price ? formatPrice(selectedComic.prices.find(price => price.type ===
-                                'printPrice').price) : 'Preço não disponível' }}</p>
+                            'printPrice').price) : 'Preço não disponível' }}</p>
                         <p><strong>Páginas:</strong> {{ selectedComic.pageCount || 'Número de páginas não disponível' }}
                         </p>
                         <p><strong>Personagens: </strong>
@@ -68,7 +70,8 @@
                         <p><strong>Histórias: </strong>
                             <span v-if="selectedComic.stories?.items?.length > 0">
                                 <span v-for="(story, index) in selectedComic.stories.items" :key="index">
-                                    {{ story.name || 'Nome não disponível' }} ({{ story.type || 'Tipo não disponível' }})<span v-if="index < selectedComic.stories.items.length - 1">,
+                                    {{ story.name || 'Nome não disponível' }} ({{ story.type || 'Tipo não disponível'
+                                    }})<span v-if="index < selectedComic.stories.items.length - 1">,
                                     </span>
                                 </span>
                             </span>
@@ -103,12 +106,13 @@
 <script>
 import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import Toolbar from '../components/Toolbar.vue';
-import Pagination from '../components/Pagination.vue';
-import ApiService from '../components/ApiService.vue';
+import Toolbar from '@/js/components/Toolbar.vue';
+import Pagination from '@/js/components/Pagination.vue';
+import ApiService from '@/js/components/ApiService.vue';
 import axios from 'axios';
 
 export default {
+    name: 'Comics',
     components: {
         Toolbar,
         Pagination
@@ -160,7 +164,7 @@ export default {
                     thumbnail: comic.thumbnail,
                     marvel_id: comic.id,
                     page_count: comic.pageCount,
-                    onsale_date: comic.dates?.find(date => date.type === 'onsaleDate')?.date.split('T')[0] || null, // Ajuste para enviar apenas a data no formato YYYY-MM-DD
+                    onsale_date: comic.dates?.find(date => date.type === 'onsaleDate')?.date.split('T')[0] || null,
                     price: comic.prices.find(price => price.type === 'printPrice').price,
                     creators: comic.creators.items || [],
                     characters: comic.characters.items || [],
@@ -172,7 +176,7 @@ export default {
                     }
                 });
                 favorites.value.push(response.data);
-                dialogVisible.value = false; // Fechar o diálogo após adicionar aos favoritos
+                dialogVisible.value = false;
             } catch (error) {
                 console.error('Error adding favorite:', error);
             }
@@ -241,5 +245,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../css/styles.sass';
+@import '@/css/styles.sass';
 </style>
