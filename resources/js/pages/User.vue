@@ -62,9 +62,10 @@
 <script>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import Toolbar from '../components/Toolbar.vue';
+import Toolbar from '@/js/components/Toolbar.vue';
 
 export default {
+    name: 'User',
     components: {
         Toolbar
     },
@@ -181,5 +182,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../css/styles.sass';
+@import '@/css/styles.sass';
 </style>

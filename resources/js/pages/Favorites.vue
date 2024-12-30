@@ -119,10 +119,11 @@
 <script>
 import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
-import Toolbar from '../components/Toolbar.vue';
-import Pagination from '../components/Pagination.vue';
+import Toolbar from '@/js/components/Toolbar.vue';
+import Pagination from '@/js/components/Pagination.vue';
 
 export default {
+    name: 'Favorites',
     components: {
         Toolbar,
         Pagination
@@ -220,7 +221,7 @@ export default {
             try {
                 await axios.delete(`/api/favorites/${type}/${id}`);
                 favorites.value = favorites.value.filter(fav => (fav.character && fav.character.id !== id) || (fav.comic && fav.comic.id !== id));
-                dialogVisible.value = false; // Fechar o diálogo após remover dos favoritos
+                dialogVisible.value = false;
             } catch (error) {
                 console.error('Error deleting favorite:', error);
             }
@@ -272,5 +273,5 @@ export default {
 </script>
 
 <style scoped>
-@import '../../css/styles.sass';
+@import '@/css/styles.sass';
 </style>

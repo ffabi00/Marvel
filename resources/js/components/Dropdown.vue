@@ -29,6 +29,7 @@ import { ref } from 'vue';
 import axios from 'axios';
 
 export default {
+    name: 'Dropdown',
     props: {
         user: {
             type: Object,
@@ -71,5 +72,5 @@ export default {
 </script>
 
 <style scoped>
-@import '../../css/styles.sass';
+@import '@/css/styles.sass';
 </style>

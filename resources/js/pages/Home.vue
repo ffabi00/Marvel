@@ -8,13 +8,15 @@
                 <div class="loading-spinner"></div>
             </div>
             <div v-else class="banner-container">
-                <div class="banner" @click="goToPage('characters')">
+                <div class="banner" @click="goToPage('characters')"
+                    style="height: 80vh !important; width: 45vw !important; max-width: 90vw !important;">
                     <img :src="heroBannerImage" alt="Heroes" />
-                    <div class="banner-text">Listar Heróis</div>
+                    <div class="banner-text">Ver Heróis</div>
                 </div>
-                <div class="banner" @click="goToPage('comics')">
+                <div class="banner" @click="goToPage('comics')"
+                    style="height: 80vh !important; width: 45vw !important; max-width: 90vw !important;">
                     <img :src="comicBannerImage" alt="Comics" />
-                    <div class="banner-text">Listar Quadrinhos</div>
+                    <div class="banner-text">Ver Quadrinhos</div>
                 </div>
             </div>
         </q-page-container>
@@ -24,10 +26,11 @@
 <script>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import Toolbar from '../components/Toolbar.vue';
-import ApiService from '../components/ApiService.vue';
+import Toolbar from '@/js/components/Toolbar.vue';
+import ApiService from '@/js/components/ApiService.vue';
 
 export default {
+    name: 'Home',
     components: {
         Toolbar
     },
@@ -113,5 +116,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../css/styles.sass';
+@import '@/css/styles.sass';
 </style>

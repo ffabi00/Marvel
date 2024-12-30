@@ -2,7 +2,7 @@ import { createApp, h } from 'vue'
 import { createInertiaApp } from '@inertiajs/vue3'
 import { Quasar } from 'quasar'
 import axios from 'axios'
-import '../css/styles.sass'
+import '@/css/styles.sass'
 
 // Import icon libraries
 import '@quasar/extras/roboto-font/roboto-font.css'
@@ -63,8 +63,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 createInertiaApp({
     resolve: name => {
-        const pages = import.meta.glob('./Pages/**/*.vue', { eager: true })
-        return pages[`./Pages/${name}.vue`]
+        const pages = import.meta.glob('/resources/js/pages/*.vue', { eager: true })
+        return pages[`/resources/js/pages/${name}.vue`]
     },
     setup ({ el, App, props, plugin }) {
         createApp({ render: () => h(App, props) })

@@ -5,18 +5,21 @@
             <div v-if="loadingCharacters">
                 <div class="loading-spinner"></div>
             </div>
-            <div v-else class="banner-container">
+            <div v-else>
                 <Pagination :totalItems="characters.length" :itemsPerPage="itemsPerPage" :currentPage="currentPage"
                     :loading="loadingCharacters" @page-changed="changePage"
                     @items-per-page-changed="changeItemsPerPage" />
-                <div class="banner" v-for="(character, index) in paginatedCharacters" :key="index"
-                    @click="openCharacterModal(character)">
-                    <img :src="`${character.thumbnail.path}.${character.thumbnail.extension}`" :alt="character.name" />
-                    <div class="favorite-container">
-                        <q-icon name="star" class="favorite-icon" @click.stop="confirmFavorite(character)" />
-                        <span class="favorite-text">Favoritar</span>
+                <div class="banner-container">
+                    <div class="banner" v-for="(character, index) in paginatedCharacters" :key="index"
+                        @click="openCharacterModal(character)">
+                        <img :src="`${character.thumbnail.path}.${character.thumbnail.extension}`"
+                            :alt="character.name" />
+                        <div class="favorite-container">
+                            <q-icon name="star" class="favorite-icon" @click.stop="confirmFavorite(character)" />
+                            <span class="favorite-text">Favoritar</span>
+                        </div>
+                        <div class="banner-text">{{ character.name }}</div>
                     </div>
-                    <div class="banner-text">{{ character.name }}</div>
                 </div>
             </div>
         </q-page-container>
@@ -71,12 +74,13 @@
 <script>
 import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import Toolbar from '../components/Toolbar.vue';
-import Pagination from '../components/Pagination.vue';
-import ApiService from '../components/ApiService.vue';
+import Toolbar from '@/js/components/Toolbar.vue';
+import Pagination from '@/js/components/Pagination.vue';
+import ApiService from '@/js/components/ApiService.vue';
 import axios from 'axios';
 
 export default {
+    name: 'Characters',
     components: {
         Toolbar,
         Pagination
@@ -137,7 +141,7 @@ export default {
                     }
                 });
                 favorites.value.push(response.data);
-                dialogVisible.value = false; // Fechar o diálogo após adicionar aos favoritos
+                dialogVisible.value = false;
             } catch (error) {
                 console.error('Error adding favorite:', error);
             }
@@ -196,5 +200,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../css/styles.sass';
+@import '@/css/styles.sass';
 </style>
