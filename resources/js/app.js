@@ -1,5 +1,5 @@
 import { createApp, h } from 'vue'
-import { createInertiaApp } from '@inertiajs/vue3'
+import { createInertiaApp } from '@inertiajs/inertia-vue3'
 import { Quasar } from 'quasar'
 import axios from 'axios'
 import '@/css/styles.sass'
@@ -44,8 +44,6 @@ const fetchBackgroundImage = async () => {
         })
     } catch (error) {
         console.error('Error fetching background image:', error)
-    } finally {
-        loading.value = false
     }
 }
 

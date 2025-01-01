@@ -91,19 +91,15 @@ body
 .bg-red
   background: linear-gradient(135deg, #000000, #8B0000) !important
 
-.marvel-app-title
-  font-size: 3em
-  margin: 1px auto
-  justify-content: center
-  align-items: center
-  width: 100%
-
 .large-screen-title
-  text-align: center
-  font-size: 3em
-  margin-top: 1px
-  margin-right: 18%
-  margin-left: auto
+  font-size: 2rem
+  font-weight: bold
+  color: white
+  margin: 0
+  display: flex !important
+  justify-content: center
+  padding-right: 40vh
+
 // Fim do estilo para a barra superior
 
 // Estilo para a página principal
@@ -135,15 +131,6 @@ body
   border-radius: 8px
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2)
 
-.banner-text
-  position: absolute
-  bottom: 10px
-  left: 50%
-  transform: translateX(-50%)
-  color: white
-  font-size: 24px
-  font-weight: bold
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5)
 // Fim do estilo para a página principal
 
 // Estilo para a sobreposição
@@ -343,8 +330,14 @@ body
   transform: translateX(-50%)
   color: white
   font-size: 24px
-  font-weight: bold
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5)
+  font-weight: 800
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), -2px -2px 4px rgba(139, 0, 0, 0.8)
+  background: linear-gradient(135deg, #ffffff, #cccccc)
+  -webkit-background-clip: text
+  background-clip: text
+  padding: 5px 10px
+  border-radius: 4px
+  backdrop-filter: blur(2px)
 // Fim do estilo específico para Comics.vue e Characters.vue
 
 // Estilo específico para o background-grid
@@ -374,7 +367,7 @@ body
   width: auto
 
 .pagination-background
-  position: relative
+  position: sticky
   width: auto
   height: 100%
   background-color: #000000
@@ -630,8 +623,14 @@ body
   transform: translateX(-50%)
   color: white
   font-size: 24px
-  font-weight: bold
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5)
+  font-weight: 800
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), -2px -2px 4px rgba(139, 0, 0, 0.8)
+  background: linear-gradient(135deg, #ffffff, #cccccc)
+  -webkit-background-clip: text
+  background-clip: text
+  padding: 5px 10px
+  border-radius: 4px
+  backdrop-filter: blur(2px)
 // Fim do estilo específico para Favorites.vue
 
 // Estilo específico para usuario

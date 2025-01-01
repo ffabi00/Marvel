@@ -1,11 +1,7 @@
 <template>
     <q-layout view="hHh lpR fFf">
-        <q-page-container class="flex flex-center background-image"
-            :style="{ backgroundImage: `url(${backgroundImage})` }">
-            <div v-if="loading">
-                <Loading />
-            </div>
-            <div v-else>
+        <q-page-container>
+            <div>
                 <q-card class="login-card">
                     <q-card-section>
                         <div class="text-h6">Login</div>
@@ -27,7 +23,7 @@
 
         <!-- Diálogo de Registro -->
         <q-dialog v-model="registerDialogVisible">
-            <q-card style="min-width: 450px">
+            <q-card style="width: 400px" class="register-dialog-card">
                 <q-card-section>
                     <div class="text-h6">Registro</div>
                 </q-card-section>
@@ -65,22 +61,17 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import axios from 'axios'
-import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
-import Loading from '@/js/components/Loading.vue'
 
 export default {
     name: 'Login',
     components: {
-        Loading
     },
     setup () {
         const email = ref('')
         const password = ref('')
-        const backgroundImage = ref('')
-        const loading = ref(true)
         const dialogVisible = ref(false)
         const dialogTitle = ref('')
         const dialogMessage = ref('')
@@ -89,46 +80,10 @@ export default {
         const registerPassword = ref('')
         const confirmPassword = ref('')
         const registerName = ref('')
-        const router = useRouter()
         const $q = useQuasar()
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
 
         axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
-
-        const isImageValid = (url) => {
-            return new Promise((resolve) => {
-                const img = new Image()
-                img.onload = () => resolve(true)
-                img.onerror = () => resolve(false)
-                img.src = url
-            })
-        }
-
-        const fetchBackgroundImage = async () => {
-            try {
-                const response = await axios.get('/api/marvel/comics')
-                const comics = response.data.data.results
-                let validImage = false
-                let selectedImage = ''
-
-                while (!validImage && comics.length > 0) {
-                    const randomIndex = Math.floor(Math.random() * comics.length)
-                    const comic = comics[randomIndex]
-                    const imageUrl = `${comic.thumbnail.path}.${comic.thumbnail.extension}`
-                    validImage = await isImageValid(imageUrl)
-                    if (validImage) {
-                        selectedImage = imageUrl
-                    }
-                    comics.splice(randomIndex, 1)
-                }
-
-                backgroundImage.value = selectedImage
-            } catch (error) {
-                console.error('Error fetching background image:', error)
-            } finally {
-                loading.value = false
-            }
-        }
 
         const showDialog = (title, message) => {
             dialogTitle.value = title
@@ -213,15 +168,9 @@ export default {
             registerDialogVisible.value = true
         }
 
-        onMounted(() => {
-            fetchBackgroundImage()
-        })
-
         return {
             email,
             password,
-            backgroundImage,
-            loading,
             login,
             dialogVisible,
             dialogTitle,

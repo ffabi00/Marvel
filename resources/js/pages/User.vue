@@ -12,8 +12,7 @@
                         <q-input v-model="user.email" label="Email" outlined class="q-mb-md input-white" />
                         <q-input v-model="user.password" label="Nova senha" type="password" outlined
                             class="q-mb-md input-white" />
-                        <q-input v-model="user.password_confirmation" label="Confirmar nova Senha" type="password" outlined
-                            class="q-mb-md input-white" />
+                        <q-input v-model="user.password_confirmation" label="Confirmar nova Senha" type="password" outlined class="q-mb-md input-white" />
                         <div class="form-actions">
                             <q-btn label="Excluir Conta" color="negative" @click="confirmDeleteAccount"
                                 class="q-mr-sm" />
@@ -62,6 +61,7 @@
 <script>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
+import { Inertia } from '@inertiajs/inertia';
 import Toolbar from '@/js/components/Toolbar.vue';
 
 export default {
@@ -132,7 +132,7 @@ export default {
 
         const handleDialogCloseReload = () => {
             dialogVisible.value = false;
-            window.location.reload();
+            Inertia.visit(window.location.href, { replace: true });
         };
 
         const confirmDeleteAccount = () => {
@@ -152,7 +152,7 @@ export default {
         const deleteAccount = async () => {
             try {
                 await axios.delete('/api/user');
-                window.location.href = '/login';
+                Inertia.visit('/login');
             } catch (error) {
                 console.error('Error deleting account:', error);
                 showDialog('Erro', 'Erro ao excluir a conta.');

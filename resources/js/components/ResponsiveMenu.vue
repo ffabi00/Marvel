@@ -6,13 +6,13 @@
                 <q-item clickable v-ripple @click="goToPage('/')">
                     <q-item-section>Home</q-item-section>
                 </q-item>
-                <q-item clickable v-ripple @click="goToPage('comics')">
+                <q-item clickable v-ripple @click="goToPage('/comics')">
                     <q-item-section>Quadrinhos</q-item-section>
                 </q-item>
-                <q-item clickable v-ripple @click="goToPage('characters')">
+                <q-item clickable v-ripple @click="goToPage('/characters')">
                     <q-item-section>Heróis</q-item-section>
                 </q-item>
-                <q-item clickable v-ripple @click="goToPage('favorites')">
+                <q-item clickable v-ripple @click="goToPage('/favorites')">
                     <q-item-section>Favoritos</q-item-section>
                 </q-item>
             </q-list>
@@ -22,13 +22,12 @@
 
 <script>
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { Inertia } from '@inertiajs/inertia';
 
 export default {
     name: 'ResponsiveMenu',
     setup () {
         const menu = ref(false);
-        const router = useRouter();
 
         const toggleMenu = () => {
             menu.value = !menu.value;
@@ -39,7 +38,7 @@ export default {
         };
 
         const goToPage = (page) => {
-            window.location.href = page;
+            Inertia.visit(page);
         };
 
         return {
