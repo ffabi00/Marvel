@@ -2,6 +2,9 @@
 
 Este projeto utiliza Laravel, Vue 3, Quasar e Vite. Siga as instruções abaixo para configurar o ambiente de desenvolvimento.
 
+## Link para acessar em produção
+- http://marvel.lab3d.com.br
+
 ## Requisitos
 
 - PHP 8.4
@@ -20,6 +23,7 @@ Este projeto utiliza Laravel, Vue 3, Quasar e Vite. Siga as instruções abaixo 
 ##  Chaves de acesso
 - Precisa gerar chaves de acesso na url para alimentar a aplicação e adicionar nas variaveis no .env
 - https://developer.marvel.com/documentation/getting_started
+
 # Variaveis para carregar
 - API_MARVEL_KEY=
 - API_MARVEL_SECRET=
@@ -34,7 +38,7 @@ Este projeto utiliza Laravel, Vue 3, Quasar e Vite. Siga as instruções abaixo 
 Clone o repositório para sua máquina local:
 
 ```sh
-git clone <URL-do-repositorio>
+git clone https://github.com/ffabi00/Marvel.git
 ```
 
 ### Passo 2: Instalar Dependências do PHP
