@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Favorite;
 
 class MarvelController extends Controller
 {
@@ -72,5 +74,23 @@ class MarvelController extends Controller
         });
 
         return response()->json(['data' => ['results' => $characters]]);
+    }
+
+    public function getUserFavorites(Request $request)
+    {
+        $user = Auth::user();
+
+        $favorites = Favorite::where('user_id', $user->id)
+            ->with(['comic', 'character'])
+            ->get()
+            ->map(function ($favorite) {
+                return [
+                    'id' => $favorite->id,
+                    'marvel_id' => $favorite->comic ? $favorite->comic->marvel_id : $favorite->character->marvel_id,
+                    'type' => $favorite->comic ? 'comic' : 'character'
+                ];
+            });
+
+        return response()->json(['data' => $favorites]);
     }
 }
