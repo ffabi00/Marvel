@@ -12,9 +12,10 @@
                     <div class="banner" v-for="(comic, index) in paginatedComics" :key="index"
                         @click="openComicModal(comic)">
                         <img :src="`${comic.thumbnail.path}.${comic.thumbnail.extension}`" :alt="comic.title" />
-                        <div class="favorite-container">
-                            <q-icon name="star" class="favorite-icon" @click.stop="confirmFavorite(comic)" />
-                            <span class="favorite-text">Favoritar</span>
+                        <div class="favorite-container" v-if="!isFavorite(comic.id)">
+                            <q-icon :name="isFavorite(comic.id) ? 'star' : 'star_border'" class="favorite-icon"
+                                @click.stop="confirmFavorite(comic)" />
+                            <span class="favorite-text">{{ isFavorite(comic.id) ? 'Remover Favorito' : 'Favoritar' }}</span>
                         </div>
                         <div class="banner-text">{{ comic.title }}</div>
                     </div>
@@ -35,25 +36,19 @@
                             :alt="selectedComic.title" />
                     </div>
                     <div class="comic-modal-details">
-                        <div class="favorite-container">
-                            <q-icon name="star" class="favorite-icon" @click="confirmFavorite(selectedComic)" />
-                            <span class="favorite-text">Favoritar</span>
+                        <div class="favorite-container" v-if="!isFavorite(selectedComic.id)">
+                            <q-icon :name="isFavorite(selectedComic.id) ? 'star' : 'star_border'"
+                                class="favorite-icon" @click="confirmFavorite(selectedComic)" />
+                            <span class="favorite-text">{{ isFavorite(selectedComic.id) ? 'Remover Favorito' : 'Favoritar' }}</span>
                         </div>
-                        <p><strong>Descrição:</strong> {{ selectedComic.description || 'Descrição não disponível.' }}
-                        </p>
-                        <p><strong>Data de Publicação:</strong> {{ selectedComic.dates?.find(date => date.type ===
-                            'onsaleDate')?.date ? formatDate(selectedComic.dates.find(date => date.type ===
-                            'onsaleDate').date) : 'Data não disponível' }}</p>
-                        <p><strong>Preço:</strong> {{ selectedComic.prices?.find(price => price.type ===
-                            'printPrice')?.price ? formatPrice(selectedComic.prices.find(price => price.type ===
-                            'printPrice').price) : 'Preço não disponível' }}</p>
-                        <p><strong>Páginas:</strong> {{ selectedComic.pageCount || 'Número de páginas não disponível' }}
-                        </p>
+                        <p><strong>Descrição:</strong> {{ selectedComic.description || 'Descrição não disponível.' }}</p>
+                        <p><strong>Data de Publicação:</strong> {{ selectedComic.dates?.find(date => date.type === 'onsaleDate')?.date ? formatDate(selectedComic.dates.find(date => date.type === 'onsaleDate').date) : 'Data não disponível' }}</p>
+                        <p><strong>Preço:</strong> {{ selectedComic.prices?.find(price => price.type === 'printPrice')?.price ? formatPrice(selectedComic.prices.find(price => price.type === 'printPrice').price) : 'Preço não disponível' }}</p>
+                        <p><strong>Páginas:</strong> {{ selectedComic.pageCount || 'Número de páginas não disponível' }}</p>
                         <p><strong>Personagens: </strong>
                             <span v-if="selectedComic.characters?.items?.length > 0">
                                 <span v-for="(character, index) in selectedComic.characters.items" :key="index">
-                                    {{ character.name || 'Nome não disponível' }}<span
-                                        v-if="index < selectedComic.characters.items.length - 1">, </span>
+                                    {{ character.name || 'Nome não disponível' }}<span v-if="index < selectedComic.characters.items.length - 1">, </span>
                                 </span>
                             </span>
                             <span v-else>Não disponível</span>
@@ -61,8 +56,7 @@
                         <p><strong>Criadores: </strong>
                             <span v-if="selectedComic.creators?.items?.length > 0">
                                 <span v-for="(creator, index) in selectedComic.creators.items" :key="index">
-                                    {{ creator.name || 'Nome não disponível' }} ({{ creator.role || 'Função não disponível' }})<span v-if="index < selectedComic.creators.items.length - 1">,
-                                    </span>
+                                    {{ creator.name || 'Nome não disponível' }} ({{ creator.role || 'Função não disponível' }})<span v-if="index < selectedComic.creators.items.length - 1">, </span>
                                 </span>
                             </span>
                             <span v-else>Não disponível</span>
@@ -70,9 +64,7 @@
                         <p><strong>Histórias: </strong>
                             <span v-if="selectedComic.stories?.items?.length > 0">
                                 <span v-for="(story, index) in selectedComic.stories.items" :key="index">
-                                    {{ story.name || 'Nome não disponível' }} ({{ story.type || 'Tipo não disponível'
-                                    }})<span v-if="index < selectedComic.stories.items.length - 1">,
-                                    </span>
+                                    {{ story.name || 'Nome não disponível' }} ({{ story.type || 'Tipo não disponível' }})<span v-if="index < selectedComic.stories.items.length - 1">, </span>
                                 </span>
                             </span>
                             <span v-else>Não disponível</span>
@@ -105,7 +97,7 @@
 
 <script>
 import { ref, onMounted, computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { Inertia } from '@inertiajs/inertia';
 import Toolbar from '@/js/components/Toolbar.vue';
 import Pagination from '@/js/components/Pagination.vue';
 import ApiService from '@/js/components/ApiService.vue';
@@ -121,7 +113,6 @@ export default {
         const comics = ref([]);
         const loadingComics = ref(true);
         const comicBannerImage = ref('');
-        const router = useRouter();
         const currentPage = ref(1);
         const itemsPerPage = ref(10);
         const isModalOpen = ref(false);
@@ -143,6 +134,23 @@ export default {
             } finally {
                 loadingComics.value = false;
             }
+        };
+
+        const fetchFavorites = async () => {
+            try {
+                const response = await ApiService.fetchData('/api/user/favorites', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                favorites.value = response.data || [];
+            } catch (error) {
+                console.error('Error fetching favorites:', error);
+            }
+        };
+
+        const isFavorite = (marvelId) => {
+            return favorites.value && favorites.value.some(favorite => favorite.marvel_id == marvelId && favorite.type === 'comic');
         };
 
         const showDialog = (title, message) => {
@@ -183,7 +191,7 @@ export default {
         };
 
         const goToComic = (comicId) => {
-            router.push(`/comics/${comicId}`);
+            Inertia.visit(`/comics/${comicId}`);
         };
 
         const openComicModal = (comic) => {
@@ -217,6 +225,7 @@ export default {
 
         onMounted(async () => {
             await fetchComics();
+            await fetchFavorites();
         });
 
         return {
@@ -238,7 +247,9 @@ export default {
             confirmFavorite,
             dialogVisible,
             dialogTitle,
-            dialogMessage
+            dialogMessage,
+            favorites,
+            isFavorite
         };
     }
 };

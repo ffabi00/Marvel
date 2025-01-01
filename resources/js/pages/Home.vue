@@ -25,7 +25,7 @@
 
 <script>
 import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { Inertia } from '@inertiajs/inertia';
 import Toolbar from '@/js/components/Toolbar.vue';
 import ApiService from '@/js/components/ApiService.vue';
 
@@ -45,7 +45,6 @@ export default {
         const loadingUser = ref(true);
         const loadingHeroBanner = ref(true);
         const loadingComicBanner = ref(true);
-        const router = useRouter();
 
         const fetchUser = async () => {
             try {
@@ -87,7 +86,7 @@ export default {
         };
 
         const goToPage = (page) => {
-            window.location.href = page;
+            Inertia.visit(page);
         };
 
         const toggleMenu = () => {

@@ -26,6 +26,7 @@
 
 <script>
 import { ref } from 'vue';
+import { Inertia } from '@inertiajs/inertia';
 import axios from 'axios';
 
 export default {
@@ -48,13 +49,13 @@ export default {
         };
 
         const goToUserProfile = () => {
-            window.location.href = '/user';
+            Inertia.visit('/user');
         };
 
         const logout = async () => {
             try {
                 await axios.post('/logout');
-                window.location.href = '/login';
+                Inertia.visit('/login');
             } catch (error) {
                 console.error('Error logging out:', error);
             }

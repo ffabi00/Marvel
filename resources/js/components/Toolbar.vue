@@ -7,9 +7,9 @@
                 </div>
                 <div v-else>
                     <q-btn flat label="Home" @click="goToPage('/')" />
-                    <q-btn flat label="Quadrinhos" @click="goToPage('comics')" />
-                    <q-btn flat label="Heróis" @click="goToPage('characters')" />
-                    <q-btn flat label="Favoritos" @click="goToPage('favorites')" />
+                    <q-btn flat label="Quadrinhos" @click="goToPage('/comics')" />
+                    <q-btn flat label="Heróis" @click="goToPage('/characters')" />
+                    <q-btn flat label="Favoritos" @click="goToPage('/favorites')" />
                 </div>
                 <q-toolbar-title :class="{ 'marvel-app-title': true, 'large-screen-title': !isSmallScreen }">
                     Marvel
@@ -22,7 +22,7 @@
 
 <script>
 import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { Inertia } from '@inertiajs/inertia';
 import axios from 'axios';
 import Dropdown from '@/js/components/Dropdown.vue';
 import ResponsiveMenu from '@/js/components/ResponsiveMenu.vue';
@@ -39,8 +39,44 @@ export default {
             name: '',
             email: ''
         });
-        const router = useRouter();
-        const isSmallScreen = ref(window.innerWidth < 768);
+        const isSmallScreen = ref(window.innerWidth < 870);
+        const backgroundImage = ref('');
+        const loading = ref(true);
+
+        const isImageValid = (url) => {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => resolve(true);
+                img.onerror = () => resolve(false);
+                img.src = url;
+            });
+        };
+
+        const fetchBackgroundImage = async () => {
+            try {
+                const response = await axios.get('/api/marvel/comics');
+                const comics = response.data.data.results;
+                let validImage = false;
+                let selectedImage = '';
+
+                while (!validImage && comics.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * comics.length);
+                    const comic = comics[randomIndex];
+                    const imageUrl = `${comic.thumbnail.path}.${comic.thumbnail.extension}`;
+                    validImage = await isImageValid(imageUrl);
+                    if (validImage) {
+                        selectedImage = imageUrl;
+                    }
+                    comics.splice(randomIndex, 1);
+                }
+
+                backgroundImage.value = selectedImage;
+            } catch (error) {
+                console.error('Error fetching background image:', error);
+            } finally {
+                loading.value = false;
+            }
+        };
 
         const fetchUser = async () => {
             try {
@@ -52,13 +88,13 @@ export default {
         };
 
         const goToPage = (page) => {
-            window.location.href = page;
+            Inertia.visit(page);
         };
 
         const logout = async () => {
             try {
                 await axios.post('/logout');
-                window.location.href = '/login';
+                Inertia.visit('/login');
             } catch (error) {
                 console.error('Error logging out:', error);
             }
@@ -69,11 +105,12 @@ export default {
         };
 
         const handleResize = () => {
-            isSmallScreen.value = window.innerWidth < 768;
+            isSmallScreen.value = window.innerWidth < 870;
         };
 
         onMounted(() => {
             fetchUser();
+            fetchBackgroundImage();
             window.addEventListener('resize', handleResize);
         });
 
@@ -83,7 +120,9 @@ export default {
             goToPage,
             logout,
             toggleMenu,
-            isSmallScreen
+            isSmallScreen,
+            backgroundImage,
+            loading
         };
     }
 };

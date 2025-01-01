@@ -53,4 +53,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/api/user', [UserController::class, 'update']);
     Route::delete('/api/user', [UserController::class, 'destroy']);
     Route::post('/api/user/verify-password', [UserController::class, 'verifyPassword']);
+    Route::get('/api/user/favorites', [MarvelController::class, 'getUserFavorites']);
 });

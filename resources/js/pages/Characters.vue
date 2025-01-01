@@ -14,9 +14,11 @@
                         @click="openCharacterModal(character)">
                         <img :src="`${character.thumbnail.path}.${character.thumbnail.extension}`"
                             :alt="character.name" />
-                        <div class="favorite-container">
-                            <q-icon name="star" class="favorite-icon" @click.stop="confirmFavorite(character)" />
-                            <span class="favorite-text">Favoritar</span>
+                        <div class="favorite-container" v-if="!isFavorite(character.id)">
+                            <q-icon :name="isFavorite(character.id) ? 'star' : 'star_border'" class="favorite-icon"
+                                @click.stop="confirmFavorite(character)" />
+                            <span class="favorite-text">{{ isFavorite(character.id) ? 'Remover Favorito' : 'Favoritar'
+                                }}</span>
                         </div>
                         <div class="banner-text">{{ character.name }}</div>
                     </div>
@@ -35,9 +37,11 @@
                             :alt="selectedCharacter.name" />
                     </div>
                     <div class="character-modal-details">
-                        <div class="favorite-container">
-                            <q-icon name="star" class="favorite-icon" @click="confirmFavorite(selectedCharacter)" />
-                            <span class="favorite-text">Favoritar</span>
+                        <div class="favorite-container" v-if="!isFavorite(selectedCharacter.id)">
+                            <q-icon :name="isFavorite(selectedCharacter.id) ? 'star' : 'star_border'"
+                                class="favorite-icon" @click="confirmFavorite(selectedCharacter)" />
+                            <span class="favorite-text">{{ isFavorite(selectedCharacter.id) ? 'Remover Favorito' :
+                                'Favoritar' }}</span>
                         </div>
                         <p><strong>Descrição:</strong> {{ selectedCharacter.description || 'Descrição não disponível.'
                             }}</p>
@@ -73,7 +77,7 @@
 
 <script>
 import { ref, onMounted, computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { Inertia } from '@inertiajs/inertia';
 import Toolbar from '@/js/components/Toolbar.vue';
 import Pagination from '@/js/components/Pagination.vue';
 import ApiService from '@/js/components/ApiService.vue';
@@ -89,7 +93,6 @@ export default {
         const characters = ref([]);
         const loadingCharacters = ref(true);
         const heroBannerImage = ref('');
-        const router = useRouter();
         const currentPage = ref(1);
         const itemsPerPage = ref(10);
         const isModalOpen = ref(false);
@@ -106,11 +109,29 @@ export default {
                 const randomIndex = Math.floor(Math.random() * characters.value.length);
                 const character = characters.value[randomIndex];
                 heroBannerImage.value = `${character.thumbnail.path}.${character.thumbnail.extension}`;
+                const favoritedCharacters = characters.value.filter(character => isFavorite(character.id));
             } catch (error) {
                 console.error('Error fetching characters:', error);
             } finally {
                 loadingCharacters.value = false;
             }
+        };
+
+        const fetchFavorites = async () => {
+            try {
+                const response = await ApiService.fetchData('/api/user/favorites', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                favorites.value = response.data || [];
+            } catch (error) {
+                console.error('Error fetching favorites:', error);
+            }
+        };
+
+        const isFavorite = (marvelId) => {
+            return favorites.value && favorites.value.some(favorite => favorite.marvel_id == marvelId && favorite.type === 'character');
         };
 
         const showDialog = (title, message) => {
@@ -148,7 +169,7 @@ export default {
         };
 
         const goToCharacter = (characterId) => {
-            router.push(`/characters/${characterId}`);
+            Inertia.visit(`/characters/${characterId}`);
         };
 
         const openCharacterModal = (character) => {
@@ -173,6 +194,7 @@ export default {
 
         onMounted(async () => {
             await fetchCharacters();
+            await fetchFavorites();
         });
 
         return {
@@ -193,7 +215,8 @@ export default {
             dialogVisible,
             dialogTitle,
             dialogMessage,
-            favorites
+            favorites,
+            isFavorite
         };
     }
 };
